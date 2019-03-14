@@ -14,7 +14,7 @@ public class ProductSnapshot
 
     private Date productSnapshotDate;
 
-    private BigDecimal productPrice;
+    private Money productPrice;
 
     @Override
     public boolean equals(Object o) {
@@ -35,12 +35,12 @@ public class ProductSnapshot
         return Objects.hash(productId, productName, productType, productSnapshotDate, productPrice);
     }
 
-    public ProductSnapshot(String productId, String productName, String productType, Date productSnapshotDate, BigDecimal productPrice) {
+    public ProductSnapshot(String productId, Money price, String productName, String productType, Date productSnapshotDate, BigDecimal productPrice) {
         this.productId = productId;
         this.productName = productName;
         this.productType = productType;
         this.productSnapshotDate = productSnapshotDate;
-        this.productPrice = productPrice;
+        this.productPrice = price;
     }
 
     public String getProductId() {
@@ -48,7 +48,7 @@ public class ProductSnapshot
     }
 
     public BigDecimal getProductPrice() {
-        return productPrice;
+        return productPrice.getValue();
     }
 
     public String getProductName() {
