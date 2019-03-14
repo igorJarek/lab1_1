@@ -24,25 +24,22 @@ public class OfferItem {
 
     private Money totalCost;
 
-    // discount
-    private String discountCause;
-
-    private BigDecimal discount;
+    private Discount discount;
 
     public OfferItem(ProductSnapshot productSnapshot, int quantity) {
-        this(productSnapshot, quantity, null, null);
+        this(productSnapshot, quantity, null);
     }
 
-    public OfferItem(ProductSnapshot productSnapshot, int quantity, BigDecimal discount, String discountCause) {
+    public OfferItem(ProductSnapshot productSnapshot, int quantity, Discount discount) {
         this.productSnapshot = productSnapshot;
 
         this.quantity = quantity;
+
         this.discount = discount;
-        this.discountCause = discountCause;
 
         BigDecimal discountValue = new BigDecimal(0);
         if (discount != null) {
-            discountValue = discountValue.add(discount);
+            discountValue = discountValue.add(discount.getAmount().getValue());
         }
 
         this.totalCost = new Money(totalCost.getValue().multiply(new BigDecimal(quantity)).subtract(discountValue), null);
@@ -60,12 +57,12 @@ public class OfferItem {
         return totalCost.getCurrency();
     }
 
-    public BigDecimal getDiscount() {
+    public Discount getDiscount() {
         return discount;
     }
 
     public String getDiscountCause() {
-        return discountCause;
+        return discount.getDiscountCause();
     }
 
     public int getQuantity() {
@@ -74,9 +71,9 @@ public class OfferItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(totalCost.getCurrency(), discount, discountCause, productSnapshot.getProductId(), productSnapshot.getProductName(),
-                productSnapshot.getProductPrice(), productSnapshot.getProductSnapshotDate(), productSnapshot.getProductType(), quantity,
-                totalCost);
+        return Objects.hash(totalCost.getCurrency(), discount, discount.getDiscountCause(), productSnapshot.getProductId(),
+                productSnapshot.getProductName(), productSnapshot.getProductPrice(), productSnapshot.getProductSnapshotDate(),
+                productSnapshot.getProductType(), quantity, totalCost);
     }
 
     @Override
@@ -92,7 +89,6 @@ public class OfferItem {
         }
         OfferItem other = (OfferItem) obj;
         return Objects.equals(discount, other.discount)
-               && Objects.equals(discountCause, other.discountCause)
                && Objects.equals(productSnapshot, other.productSnapshot)
                && quantity == other.quantity
                && Objects.equals(totalCost, other.totalCost);
